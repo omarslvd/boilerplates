@@ -3,3 +3,4 @@ docker-compose/homarr/configs
 docker-compose/homarr/icons
 docker-compose/metube/downloads
 docker-compose/n8n/.n8n
+docker-compose/uptime-kuma/data

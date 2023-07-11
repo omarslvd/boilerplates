@@ -1,0 +1,25 @@
+version: "3"
+services:
+  uptime-kuma:
+    container_name: uptime-kuma
+    image: louislam/uptime-kuma:1
+    restart: unless-stopped
+    volumes:
+      - ./data:/app/data
+    labels:
+      # Define the network that should be used
+      - "traefik.docker.network=traefik_network"
+
+      - "traefik.enable=true"
+      - "traefik.http.routers.uptime-kuma.rule=Host(`uptime-kuma.docker.localhost`) || Host(`uptime-kuma.apps.local`)"
+      - "traefik.http.routers.uptime-kuma.entrypoints=https"
+      - "traefik.http.services.uptime-kuma.loadbalancer.server.port=3001"
+      - "traefik.http.routers.uptime-kuma.service=uptime-kuma"
+      - "traefik.http.routers.uptime-kuma.tls=true"
+
+    networks:
+      - traefik_network
+
+networks:
+  traefik_network:
+    external: true
