@@ -1,0 +1,25 @@
+version: "3"
+services:
+  metube:
+    container_name: metube
+    image: ghcr.io/alexta69/metube
+    restart: unless-stopped
+    volumes:
+      - ./downloads:/downloads
+    labels:
+      # Define the network that should be used
+      - "traefik.docker.network=traefik_network"
+
+      - "traefik.enable=true"
+      - "traefik.http.routers.metube.rule=Host(`metube.docker.localhost`) || Host(`metube.apps.local`)"
+      - "traefik.http.routers.metube.entrypoints=https"
+      - "traefik.http.services.metube.loadbalancer.server.port=8081"
+      - "traefik.http.routers.metube.service=metube"
+      - "traefik.http.routers.metube.tls=true"
+
+    networks:
+      - traefik_network
+
+networks:
+  traefik_network:
+    external: true

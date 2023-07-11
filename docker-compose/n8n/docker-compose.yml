@@ -1,0 +1,25 @@
+version: "3"
+services:
+  n8n:
+    container_name: n8n
+    image: docker.n8n.io/n8nio/n8n:latest
+    restart: unless-stopped
+    volumes:
+      - ./.n8n:/home/node/.n8n
+    labels:
+      # Define the network that should be used
+      - "traefik.docker.network=traefik_network"
+
+      - "traefik.enable=true"
+      - "traefik.http.routers.n8n.rule=Host(`n8n.docker.localhost`) || Host(`n8n.apps.local`)"
+      - "traefik.http.routers.n8n.entrypoints=https"
+      - "traefik.http.services.n8n.loadbalancer.server.port=5678"
+      - "traefik.http.routers.n8n.service=n8n"
+      - "traefik.http.routers.n8n.tls=true"
+
+    networks:
+      - traefik_network
+
+networks:
+  traefik_network:
+    external: true
